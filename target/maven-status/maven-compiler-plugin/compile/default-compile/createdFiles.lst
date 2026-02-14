@@ -1,0 +1,4 @@
+com\tastytap\dao\UsuarioDao.class
+com\tastytap\config\ConexionDB.class
+com\tastytap\modelo\Usuario.class
+com\tastytap\TastyTap.class
