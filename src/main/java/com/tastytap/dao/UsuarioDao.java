@@ -34,8 +34,8 @@ public class UsuarioDao {
             return "No hay usuarios registrados.";
         }
 
-    return resultado.toString().trim(); // ← Solo DEVUELVE el texto, no imprime
-}
+        return resultado.toString().trim(); // ← Solo DEVUELVE el texto, no imprime
+    }
 
     // Buscar un usuario por nombre (retorna un solo objeto)
     public static Usuario buscarPorNombre(String nombreBusqueda) {
@@ -64,46 +64,67 @@ public class UsuarioDao {
     }
 
     public static boolean insertar(Usuario u) {
-    String sql = "INSERT INTO usuarios (nombre, edad, contrasena, rol_id) VALUES (?, ?, ?, ?)";
-    try (Connection conn = ConexionDB.MetodoConectar();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        
-        pstmt.setString(1, u.getNombre());
-        pstmt.setInt(2, u.getEdad());
-        pstmt.setString(3, u.getPass());
-        pstmt.setInt(4, u.getRol_id());
-        
-        return pstmt.executeUpdate() > 0; // Si devuelve > 0, se insertó con éxito
-    } catch (SQLException e) {
-        System.err.println("Error al insertar: " + e.getMessage());
-        return false;
+        String sql = "INSERT INTO usuarios (nombre, edad, contrasena, rol_id) VALUES (?, ?, ?, ?)";
+        try (Connection conn = ConexionDB.MetodoConectar();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, u.getNombre());
+            pstmt.setInt(2, u.getEdad());
+            pstmt.setString(3, u.getPass());
+            pstmt.setInt(4, u.getRol_id());
+            
+            return pstmt.executeUpdate() > 0; // Si devuelve > 0, se insertó con éxito
+        } catch (SQLException e) {
+            System.err.println("Error al insertar: " + e.getMessage());
+            return false;
+        }
     }
-}
 
     public static boolean actualizar(Usuario u) {
-    String sql = "UPDATE usuarios SET edad = ?, contrasena = ? WHERE nombre = ?";
-    try (Connection conn = ConexionDB.MetodoConectar();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        
-        pstmt.setInt(1, u.getEdad());
-        pstmt.setString(2, u.getPass());
-        pstmt.setString(3, u.getNombre());
-        
-        return pstmt.executeUpdate() > 0;
-    } catch (SQLException e) {
-        return false;
+        String sql = "UPDATE usuarios SET edad = ?, contrasena = ? WHERE nombre = ?";
+        try (Connection conn = ConexionDB.MetodoConectar();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, u.getEdad());
+            pstmt.setString(2, u.getPass());
+            pstmt.setString(3, u.getNombre());
+            
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            return false;
+        }
     }
-}
 
     public static boolean eliminar(String nombre) {
-    String sql = "DELETE FROM usuarios WHERE nombre = ?";
-    try (Connection conn = ConexionDB.MetodoConectar();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        
-        pstmt.setString(1, nombre);
-        return pstmt.executeUpdate() > 0;
-    } catch (SQLException e) {
-        return false;
+        String sql = "DELETE FROM usuarios WHERE nombre = ?";
+        try (Connection conn = ConexionDB.MetodoConectar();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, nombre);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            return false;
+        }
     }
-}
+
+    // MÉTODO NUEVO PARA LOGIN (Indispensable)
+    public static Usuario validarLogin(String nombre, String password) {
+        String sql = "SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?";
+        try (Connection conn = ConexionDB.MetodoConectar();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, nombre);
+            pstmt.setString(2, password);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                Usuario u = new Usuario();
+                u.seItId(rs.getInt("id"));
+                u.setNombre(rs.getString("nombre"));
+                u.setRol_id(rs.getInt("rol_id"));
+                return u;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
