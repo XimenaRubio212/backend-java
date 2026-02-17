@@ -109,22 +109,26 @@ public class UsuarioDao {
 
     // MÉTODO NUEVO PARA LOGIN (Indispensable)
     public static Usuario validarLogin(String nombre, String password) {
+        Usuario usuario = null;
         String sql = "SELECT * FROM usuarios WHERE nombre = ? AND contrasena = ?";
+
         try (Connection conn = ConexionDB.MetodoConectar();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, nombre);
             pstmt.setString(2, password);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                Usuario u = new Usuario();
-                u.seItId(rs.getInt("id"));
-                u.setNombre(rs.getString("nombre"));
-                u.setRol_id(rs.getInt("rol_id"));
-                return u;
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    usuario = new Usuario();
+                    usuario.seItId(rs.getInt("id"));
+                    usuario.setNombre(rs.getString("nombre"));
+                    usuario.setRol_id(rs.getInt("rol_id"));
+                }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return usuario; //Si devuelve null, no se ha encontrado el usuario o la clave esta mal
     }
 }
