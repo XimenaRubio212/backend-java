@@ -10,24 +10,27 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-// Mantenemos la URL del segundo código como solicitaste
 @WebServlet("/registro-usuario")
 public class RegistroServlet extends HttpServlet {
-
+    
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest req, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        // Implementamos la lógica de respuesta del primer código (JSON)
+        // CABECERAS CORS
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        
         PrintWriter out = response.getWriter();
 
         try {
             // 1. Capturar los datos
-            String nombre = request.getParameter("nombre_registro");
-            String edadStr = request.getParameter("edad_registro");
-            String pass = request.getParameter("pass_registro");
+            String nombre = req.getParameter("nombre_registro");
+            String edadStr = req.getParameter("edad_registro");
+            String pass = req.getParameter("pass_registro");
 
             // Validación básica para evitar errores nulos antes de parsear
             if (nombre == null || edadStr == null || pass == null) {
@@ -55,5 +58,14 @@ public class RegistroServlet extends HttpServlet {
             // Manejo de errores generales
             out.print("{\"status\":\"error\", \"message\":\"Error interno del servidor.\"}");
         }
+    }
+    
+    // ✅ AGREGAR ESTE MÉTODO para manejar preflight de CORS
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 }
