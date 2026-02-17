@@ -1,5 +1,6 @@
-com\tastytap\servlets\UsuarioServlet.class
+com\tastytap\servlets\LoginServlet.class
 com\tastytap\dao\UsuarioDao.class
+com\tastytap\servlets\RegistroServlet.class
 com\tastytap\config\ConexionDB.class
 com\tastytap\modelo\Usuario.class
 com\tastytap\TastyTap.class
