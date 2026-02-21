@@ -1,0 +1,25 @@
+/* FORMULARIO DE ONBOARDING EMPRESA (Punto 9) */
+.provider-form-onboarding {
+    max-width: 700px;
+    margin: 3rem auto;
+    background: white;
+    padding: 30px;
+    border: 2px solid var(--naranja);
+    border-radius: 15px;
+}
+
+/* PUNTO 6.3: Captura de ubicación y teléfono de la empresa */
+.input-empresa-data {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* PUNTO 2: Historial de ventas */
+.sales-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 2rem;
+}

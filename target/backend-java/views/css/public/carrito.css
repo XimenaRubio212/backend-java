@@ -1,0 +1,121 @@
+/* =========================================
+   LÓGICA DEL CARRITO (SIN JAVASCRIPT)
+   ========================================= */
+
+/* Ocultar los checkboxes de control */
+.cart-logic {
+    display: none;
+}
+
+/* --- Si se desmarca el Producto 1, ocultar su tarjeta --- */
+#prod1:not(:checked) ~ main .card-prod1 {
+    display: none;
+}
+
+/* --- Si se desmarca el Producto 2, ocultar su tarjeta --- */
+#prod2:not(:checked) ~ main .card-prod2 {
+    display: none;
+}
+
+/* --- Mostrar mensaje de "Vacío" solo si ambos están desmarcados --- */
+.empty-msg { display: none; text-align: center; padding: 20px; }
+
+#prod1:not(:checked) ~ #prod2:not(:checked) ~ main .empty-msg {
+    display: block;
+}
+
+/* =========================================
+   DISEÑO VISUAL DEL CARRITO
+   ========================================= */
+.cart-section {
+    padding: 40px 5%;
+    background-color: #f8f9fa;
+}
+
+.cart-container {
+    display: flex;
+    max-width: 1100px;
+    margin: 0 auto;
+    gap: 30px;
+}
+
+.cart-items { flex: 2; }
+
+.cart-item-card {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.cart-item-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+
+.item-info { flex: 1; }
+.item-info h4 { margin-bottom: 5px; color: #2d3436; }
+.item-info p { font-size: 0.8rem; color: #888; }
+.item-price { font-weight: bold; color: #ff6b6b; }
+
+.btn-remove {
+    background: #fff0f0;
+    color: #ff6b6b;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-remove:hover {
+    background: #ff6b6b;
+    color: white;
+}
+
+/* Resumen lateral */
+.cart-summary {
+    flex: 1;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    height: fit-content;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    color: #636e72;
+}
+
+.total {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #2d3436;
+    margin-top: 15px;
+}
+
+.btn-checkout {
+    display: block;
+    width: 100%;
+    background: #ff6b6b;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+/* Responsivo */
+@media (max-width: 800px) {
+    .cart-container { flex-direction: column; }
+}

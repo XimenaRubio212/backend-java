@@ -1,71 +1,167 @@
 package com.tastytap.servlets;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.tastytap.dao.UsuarioDao;
 import com.tastytap.modelo.Usuario;
-import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
+import java.io.IOException;
+import java.io.PrintWriter;
 
-@WebServlet("/registro-usuario")
+/**
+ * ============================================================
+ *  RegistroServlet — POST /api/registro
+ * ============================================================
+ *
+ *  Registra un nuevo usuario con validaciones completas:
+ *
+ *  VALIDACIONES:
+ *  1. Todos los campos requeridos presentes
+ *  2. La edad es un número válido y >= 13
+ *  3. Las contraseñas coinciden (validación server-side, aunque
+ *     el frontend ya lo valida también)
+ *  4. La contraseña tiene mínimo 6 caracteres
+ *  5. El rol es válido (1, 2 o 3)
+ *  6. El nombre de usuario no está ya en uso
+ *
+ *  PARÁMETROS del formulario:
+ *  - nombre_registro   Nombre de usuario
+ *  - edad_registro     Edad (número)
+ *  - pass_registro     Contraseña
+ *  - pass_confirmar    Confirmación de contraseña
+ *  - rol_id            1=admin, 2=cliente, 3=proveedor
+ *  - email_registro    Email (opcional)
+ *  - tel_registro      Teléfono (opcional)
+ *
+ *  NO requiere token (ruta pública).
+ * ============================================================
+ */
+@WebServlet("/api/registro")
 public class RegistroServlet extends HttpServlet {
-    
+
+    private final Gson gson = new Gson();
+
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        
-        // CABECERAS CORS
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        
-        PrintWriter out = response.getWriter();
+
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        PrintWriter out = resp.getWriter();
 
         try {
-            // 1. Capturar los datos
-            String nombre = req.getParameter("nombre_registro");
-            String edadStr = req.getParameter("edad_registro");
-            String pass = req.getParameter("pass_registro");
+            // --------------------------------------------------
+            // 1. LEER PARÁMETROS
+            // --------------------------------------------------
+            String nombre       = req.getParameter("nombre_registro");
+            String edadStr      = req.getParameter("edad_registro");
+            String pass         = req.getParameter("pass_registro");
+            String passConfirmar = req.getParameter("pass_confirmar");
+            String rolStr       = req.getParameter("rol_id");
+            String email        = req.getParameter("email_registro");  // Opcional
+            String telefono     = req.getParameter("tel_registro");    // Opcional
 
-            // Validación básica para evitar errores nulos antes de parsear
-            if (nombre == null || edadStr == null || pass == null) {
-                throw new NumberFormatException("Faltan parámetros");
+            // --------------------------------------------------
+            // 2. VALIDACIONES
+            // --------------------------------------------------
+
+            // 2.1 Campos requeridos
+            if (nombre == null || nombre.isBlank()) {
+                out.print(gson.toJson(error("El nombre es requerido.")));
+                return;
+            }
+            if (pass == null || pass.isBlank()) {
+                out.print(gson.toJson(error("La contraseña es requerida.")));
+                return;
+            }
+            if (passConfirmar == null || passConfirmar.isBlank()) {
+                out.print(gson.toJson(error("Debes confirmar tu contraseña.")));
+                return;
             }
 
-            // 2. Convertir edad y crear objeto
-            int edad = Integer.parseInt(edadStr);
-            Usuario nuevoUsuario = new Usuario(nombre, edad, pass, 2); // Rol 2 = Cliente
-            
-            // 3. Llamar al DAO
-            boolean exito = UsuarioDao.insertar(nuevoUsuario);
+            // 2.2 Las contraseñas deben ser idénticas
+            // Esta validación es crítica: aunque el JS la hace en el frontend,
+            // SIEMPRE debe hacerse también en el backend por seguridad.
+            if (!pass.equals(passConfirmar)) {
+                out.print(gson.toJson(error("Las contraseñas no coinciden.")));
+                return;
+            }
 
-            // 4. Responder con JSON (Lógica del primer código)
+            // 2.3 Mínimo 6 caracteres en la contraseña
+            if (pass.length() < 6) {
+                out.print(gson.toJson(error("La contraseña debe tener al menos 6 caracteres.")));
+                return;
+            }
+
+            // 2.4 Edad válida
+            int edad;
+            try {
+                edad = Integer.parseInt(edadStr);
+                if (edad < 13 || edad > 120) {
+                    out.print(gson.toJson(error("La edad debe estar entre 13 y 120 años.")));
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                out.print(gson.toJson(error("La edad debe ser un número válido.")));
+                return;
+            }
+
+            // 2.5 Rol válido (1, 2 o 3)
+            int rolId;
+            try {
+                rolId = Integer.parseInt(rolStr);
+                if (rolId < 1 || rolId > 3) {
+                    out.print(gson.toJson(error("Rol inválido. Debe ser 1, 2 o 3.")));
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                // Si no envían rol, se asigna cliente por defecto
+                rolId = 2;
+            }
+
+            // 2.6 Verificar si el nombre ya está en uso
+            if (UsuarioDao.existeNombre(nombre.trim())) {
+                out.print(gson.toJson(error("El nombre de usuario '" + nombre + "' ya está en uso.")));
+                return;
+            }
+
+            // --------------------------------------------------
+            // 3. CREAR Y REGISTRAR EL USUARIO
+            // La contraseña se hashea con BCrypt dentro del DAO.
+            // --------------------------------------------------
+            Usuario nuevo = new Usuario(nombre.trim(), edad, pass, rolId);
+            boolean exito = UsuarioDao.registrar(nuevo, email, telefono);
+
+            // --------------------------------------------------
+            // 4. RESPONDER
+            // --------------------------------------------------
             if (exito) {
-                out.print("{\"status\":\"success\", \"message\":\"¡Registro exitoso!\"}");
+                JsonObject respuesta = new JsonObject();
+                respuesta.addProperty("status", "success");
+                respuesta.addProperty("message", "¡Registro exitoso! Ya puedes iniciar sesión.");
+                out.print(gson.toJson(respuesta));
             } else {
-                out.print("{\"status\":\"error\", \"message\":\"El nombre de usuario ya existe o hubo un error.\"}");
+                out.print(gson.toJson(error("No se pudo registrar el usuario. Intenta de nuevo.")));
             }
-            
-        } catch (NumberFormatException e) {
-            // Manejo de errores de datos (Lógica del primer código)
-            out.print("{\"status\":\"error\", \"message\":\"Datos inválidos.\"}");
+
         } catch (Exception e) {
-            // Manejo de errores generales
-            out.print("{\"status\":\"error\", \"message\":\"Error interno del servidor.\"}");
+            System.err.println("❌ Error en RegistroServlet: " + e.getMessage());
+            resp.setStatus(500);
+            out.print(gson.toJson(error("Error interno del servidor.")));
         }
     }
-    
-    // ✅ AGREGAR ESTE MÉTODO para manejar preflight de CORS
+
     @Override
-    protected void doOptions(HttpServletRequest request, HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-        response.setStatus(HttpServletResponse.SC_OK);
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) {
+        resp.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    private JsonObject error(String mensaje) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("status", "error");
+        obj.addProperty("message", mensaje);
+        return obj;
     }
 }

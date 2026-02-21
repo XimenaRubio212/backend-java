@@ -10,15 +10,16 @@
     <packaging>war</packaging>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- Nombre del contexto de la app (URL) -->
         <app.context>backend-java</app.context>
     </properties>
 
     <dependencies>
-        <!-- Jakarta Servlet API (Necesario para Tomcat 10+) -->
+
+        <!-- ===== SERVIDOR ===== -->
+        <!-- Jakarta Servlet API para Tomcat 10+ -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -26,33 +27,73 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Conector de MySQL -->
+        <!-- ===== BASE DE DATOS ===== -->
+        <!-- Conector MySQL -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
         </dependency>
 
-        <!-- Gson para manejo de JSON -->
+        <!-- ===== JSON ===== -->
+        <!-- Gson para serializar/deserializar objetos a JSON -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10.1</version>
         </dependency>
 
-        <!-- JUnit para pruebas unitarias -->
+        <!-- ===== SEGURIDAD - CONTRASEÑAS ===== -->
+        <!--
+            BCrypt: Convierte la contraseña en un hash seguro antes de guardarla.
+            Ejemplo: "miPass123" → "$2a$10$randomSalt..."
+            NUNCA se guarda la contraseña en texto plano.
+        -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
+        <!-- ===== SEGURIDAD - TOKENS JWT ===== -->
+        <!--
+            JJWT: Genera y valida JSON Web Tokens.
+            El token viaja en cada petición para identificar al usuario sin sesión.
+            Se divide en 3 partes: header.payload.firma
+        -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-gson</artifactId>
+            <version>0.12.5</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- ===== PRUEBAS ===== -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>
         <finalName>${app.context}</finalName>
         <plugins>
-            <!-- Plugin para compilar con Java 17 -->
+
+            <!-- Compilar con Java 17 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -63,7 +104,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin para generar el archivo WAR -->
+            <!-- Generar archivo WAR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -73,7 +114,7 @@
                 </configuration>
             </plugin>
 
-            <!-- PLUGIN DE CARGO: Para ejecutar Tomcat 10 sin instalar nada extra -->
+            <!-- Tomcat 10 embebido -->
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-maven3-plugin</artifactId>
@@ -91,6 +132,7 @@
                     </configuration>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 </project>

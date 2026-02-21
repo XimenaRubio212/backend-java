@@ -1,0 +1,143 @@
+/* --- NAVBAR --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 5%;
+    background: var(--white);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.navbar__logo h1 { font-size: 1.5rem; color: var(--primary); display: inline-block; }
+
+.navbar__menu a {
+    text-decoration: none;
+    color: #555;
+    margin-left: 20px;
+    font-weight: 500;
+}
+
+.navbar__menu a.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+
+/* --- HERO --- */
+.hero {
+    background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
+                url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1350&q=80');
+    background-size: cover;
+    background-position: center;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.main-title { font-size: 2.2rem; margin-bottom: 10px; }
+
+/* --- SECCIÓN TOP 4 --- */
+.top-area {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.section-subtitle {
+    font-size: 1.8rem;
+    color: var(--dark);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* GRID DE TARJETAS */
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas */
+    gap: 25px;
+}
+
+/* CARDS HORIZONTALES */
+.card-horizontal {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
+
+.card-horizontal:hover { 
+    transform: translateY(-5px); 
+}
+
+.card-body {
+    display: flex;
+    padding: 15px;
+}
+
+.card-image {
+    flex: 0 0 140px;
+    height: 150px;
+}
+
+.card-image img {
+    max-width: 170px;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.card-content {
+    flex: 1;
+    padding-left: 20px;
+}
+
+/* BADGES POR CIUDAD */
+.badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+}
+
+.bga { background: #ff6b6b; } /* Bucaramanga - Rojo */
+.florida { background: #4ecdc4; } /* Floridablanca - Turquesa */
+.piede { background: #f9ca24; } /* Piedecuesta - Amarillo */
+.giron { background: #6c5ce7; } /* Girón - Morado */
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.card-header h3 { font-size: 1.1rem; color: var(--dark); }
+
+.description { font-size: 0.85rem; color: #666; margin-bottom: 12px; }
+
+.place-details p { font-size: 0.8rem; color: #777; margin: 3px 0; }
+
+.place-details i { color: var(--primary); margin-right: 5px; }
+
+/* FOOTER DE LA CARD */
+.card-footer {
+    padding: 0 15px 15px 15px;
+}
+
+.btn-link {
+    display: block;
+    text-align: center;
+    padding: 8px;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.btn-link:hover {
+    background: var(--primary);
+    color: white;
+}

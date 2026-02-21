@@ -1,0 +1,321 @@
+/* =========================================
+   VARIABLES Y CONFIGURACIÓN BASE
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --primary-color: #ff6b6b;   /* Coral de TastyTap */
+    --bg-color: #f8f9fa;        /* Fondo gris muy claro */
+    --text-color: #333;         /* Texto principal */
+    --text-muted: #777;         /* Texto secundario */
+    --white: #ffffff;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    --border-radius: 20px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* =========================================
+   BARRA DE NAVEGACIÓN (NAVBAR)
+   ========================================= */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 8%;
+    background-color: var(--white);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar__logo {
+    display: flex;
+    align-items: center;
+}
+
+.navbar__logo h1 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.navbar__menu a {
+    text-decoration: none;
+    color: var(--text-color);
+    margin-left: 2rem;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.navbar__menu a:hover {
+    color: var(--primary-color);
+}
+
+/* =========================================
+   CONTENEDOR Y GRID DE CHECKOUT
+   ========================================= */
+.container {
+    max-width: 1100px;
+    margin: 3rem auto;
+    padding: 0 20px;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr; /* Dos columnas: pedido y pago */
+    gap: 30px;
+}
+
+h2 {
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+/* =========================================
+   SECCIÓN DE PEDIDO (IZQUIERDA)
+   ========================================= */
+.order-section {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 15px;
+    object-fit: cover;
+    margin-right: 1.5rem;
+}
+
+.details .name {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.details .city {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.details .price {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.btn-back {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.btn-back:hover {
+    text-decoration: underline;
+}
+
+/* =========================================
+   SECCIÓN DE PAGO (DERECHA)
+   ========================================= */
+.payment-section {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    height: fit-content;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 1rem;
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    background-color: #fffafa;
+    margin-bottom: 1.5rem;
+}
+
+.option-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.option-info i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.bank-details {
+    background-color: #f9f9f9;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+    border-left: 4px solid var(--primary-color);
+}
+
+.bank-details strong {
+    display: block;
+    margin: 5px 0;
+    font-size: 1rem;
+}
+
+/* Caja de Resumen de Totales */
+.summary-box .row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+}
+
+.summary-box hr {
+    margin: 1rem 0;
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+.row.total {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.btn-pay {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    padding: 1rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: transform 0.2s, background 0.3s;
+}
+
+.btn-pay:hover {
+    background-color: #ff5252;
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   PANTALLA DE ÉXITO
+   ========================================= */
+.success-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+}
+
+.success-card {
+    background: var(--white);
+    padding: 3rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    box-shadow: var(--shadow);
+    max-width: 550px;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.check-icon {
+    font-size: 5rem;
+    color: #4CAF50; /* Verde éxito */
+    margin-bottom: 1rem;
+}
+
+.order-number {
+    display: inline-block;
+    background-color: #eee;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    margin: 1rem 0;
+}
+
+/* =========================================
+   PIE DE PÁGINA (FOOTER)
+   ========================================= */
+footer {
+    background-color: #333;
+    color: var(--white);
+    padding: 4rem 8% 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    margin-top: 5rem;
+}
+
+.footer-col h4 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.footer-col ul {
+    list-style: none;
+}
+
+.footer-col ul li {
+    margin-bottom: 0.8rem;
+    color: #bbb;
+    cursor: pointer;
+}
+
+.footer-col ul li:hover {
+    color: var(--white);
+}
+
+.socials i {
+    font-size: 1.2rem;
+    margin-right: 10px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+/* =========================================
+   RESPONSIVE (PARA MÓVILES)
+   ========================================= */
+@media (max-width: 768px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .navbar {
+        padding: 1rem 5%;
+    }
+    
+    .navbar__menu {
+        display: none; /* Podrías añadir un menú hamburguesa aquí */
+    }
+}

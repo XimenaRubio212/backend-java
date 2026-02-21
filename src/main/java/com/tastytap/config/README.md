@@ -1,0 +1,3 @@
+### 2. Elimina la clase `config/ConexionDB.java`
+*   **¿Por qué?** Spring Boot ya sabe cómo conectarse a MySQL. Solo tienes que escribir la contraseña en el archivo `application.properties` (como te mostré en el paso anterior).
+*   **El cambio:** Spring gestiona el "Pool de conexiones" automáticamente. Ya no tienes que abrir y cerrar conexiones manualmente con `Connection conn = ...`, lo cual evita que la base de datos se bloquee.

@@ -1,0 +1,176 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa; /* Fondo gris muy claro como el de la imagen */
+    color: #333;
+}
+
+/* Navbar Estilo TastyTap */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 8%;
+    background: white;
+}
+
+.logo { display: flex; align-items: center; }
+.logo img { height: 40px; margin-right: 10px; }
+.brand-name { color: #ff6b6b; font-weight: bold; font-size: 1.5rem; }
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    margin-left: 20px;
+    font-size: 0.9rem;
+}
+
+/* Contenedor Principal */
+.container {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.main-title {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 40px;
+    font-weight: 600;
+}
+
+/* Estilo de la Tarjeta */
+.order-card {
+    background: white;
+    border-radius: 20px; /* Bordes muy redondeados como en la foto */
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    position: relative;
+    border: 1px solid #f0f0f0;
+}
+
+/* El borde rojo/salmon lateral para el pedido activo */
+.card-preparing {
+    border-left: 6px solid #ff6b6b;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.order-number {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* Badges de Estado */
+.status-badge {
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.badge-preparing {
+    background-color: #fff0f0;
+    color: #ff6b6b;
+}
+
+.badge-delivered {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+/* Cuerpo de la Tarjeta */
+.card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.order-date {
+    color: #999;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+}
+
+.order-items {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.order-method {
+    color: #888;
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+}
+
+/* Precio Total a la derecha */
+.order-total {
+    text-align: right;
+}
+
+.label-total {
+    font-size: 0.8rem;
+    color: #bbb;
+}
+
+.amount-total {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Botones de las tarjetas */
+.btn-outline {
+    display: inline-block;
+    text-decoration: none;
+    border: 2px solid #000;
+    color: #000;
+    padding: 8px 20px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 400;
+    transition: 0.3s;
+}
+
+.btn-outline:hover {
+    background: #000;
+    color: #fff;
+}
+
+.btn-outline.grey {
+    border-color: #eee;
+    color: #666;
+}
+
+/* Botón Final Centrado */
+.center-button {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.btn-primary {
+    display: inline-block;
+    background-color: #ff6b6b;
+    color: white;
+    text-decoration: none;
+    padding: 12px 40px;
+    border-radius: 12px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: #ff5252;
+}
