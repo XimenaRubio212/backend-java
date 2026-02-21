@@ -1,12 +1,6 @@
-com\tastytap\filtros\FiltroAutenticacion.class
+com\tastytap\TastyTapApplication.class
+com\tastytap\controller\AuthController.class
+com\tastytap\dao\UsuarioDao.class
+com\tastytap\config\ConexionDB.class
 com\tastytap\modelo\Usuario.class
 com\tastytap\util\TokenUtil.class
-com\tastytap\servlets\ProductosServlet.class
-com\tastytap\servlets\AdminServlet.class
-com\tastytap\servlets\HistorialServlet.class
-com\tastytap\servlets\LoginServlet.class
-com\tastytap\dao\UsuarioDao.class
-com\tastytap\servlets\RegistroServlet.class
-com\tastytap\config\ConexionDB.class
-com\tastytap\servlets\PerfilServlet.class
-com\tastytap\TastyTap.class
