@@ -1,6 +1,2 @@
 com\tastytap\TastyTapApplication.class
-com\tastytap\controller\AuthController.class
-com\tastytap\dao\UsuarioDao.class
 com\tastytap\config\ConexionDB.class
-com\tastytap\modelo\Usuario.class
-com\tastytap\util\TokenUtil.class
