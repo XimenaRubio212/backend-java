@@ -1,8 +1,12 @@
 package com.tastytap;
 
+import com.tastytap.controller.*;
+import com.tastytap.filtros.FiltroAutenticacion;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.tomcat.util.descriptor.web.FilterDef;
+import org.apache.tomcat.util.descriptor.web.FilterMap;
 import java.io.File;
 
 public class TastyTapApplication {
@@ -11,27 +15,52 @@ public class TastyTapApplication {
         tomcat.setPort(8080);
         tomcat.getConnector();
 
-        // Configuración del contexto
-        String docBase = new File(".").getAbsolutePath();
-        Context context = tomcat.addContext("", docBase);
+        // Directorio temporal para Tomcat
+        String baseDir = new File("target/tomcat-temp").getAbsolutePath();
+        Context context = tomcat.addContext("", baseDir);
 
-        // Registro de Servlets manualmente (Si el @WebServlet no los toma solos)
-        // Esto asegura que todo lo que ves en "rojo" sea mapeado por Tomcat
-        Tomcat.addServlet(context, "LoginServlet", "com.tastytap.controller.LoginServlet");
-        context.addServletMappingDecoded("/login", "LoginServlet");
+        // --- CONFIGURACIÓN DE FILTROS ---
+        // Registramos el filtro de forma manual para asegurar el orden de ejecución
+        FilterDef authFilterDef = new FilterDef();
+        authFilterDef.setFilterName("FiltroAutenticacion");
+        authFilterDef.setFilterClass(FiltroAutenticacion.class.getName());
+        context.addFilterDef(authFilterDef);
 
-        Tomcat.addServlet(context, "RegistroServlet", "com.tastytap.controller.RegistroServlet");
-        context.addServletMappingDecoded("/registro", "RegistroServlet");
+        FilterMap authFilterMap = new FilterMap();
+        authFilterMap.setFilterName("FiltroAutenticacion");
+        authFilterMap.addURLPattern("/*"); // El filtro decide internamente qué es público y qué no
+        context.addFilterMap(authFilterMap);
 
-        Tomcat.addServlet(context, "ProductosServlet", "com.tastytap.controller.ProductosServlet");
-        context.addServletMappingDecoded("/productos", "ProductosServlet");
+        // --- REGISTRO DE SERVLETS (API) ---
+        // Autenticación
+        registrarServlet(context, "LoginServlet", new LoginServlet(), "/api/auth/login");
+        registrarServlet(context, "RegistroServlet", new RegistroServlet(), "/api/auth/registro");
 
-        Tomcat.addServlet(context, "PedidosServlet", "com.tastytap.controller.PedidosServlet");
-        context.addServletMappingDecoded("/pedidos", "PedidosServlet");
+        // Productos
+        registrarServlet(context, "ProductosServlet", new ProductosServlet(), "/api/productos/*");
 
-        System.out.println(">>> TastyTap Backend iniciado en http://localhost:8080");
-        
+        // Pedidos y Pagos
+        registrarServlet(context, "PedidosServlet", new PedidosServlet(), "/api/pedidos/*");
+        registrarServlet(context, "PagosServlet", new PagosServlet(), "/api/pagos/*");
+
+        // Usuario
+        registrarServlet(context, "PerfilServlet", new PerfilServlet(), "/api/perfil/*");
+        registrarServlet(context, "HistorialServlet", new HistorialServlet(), "/api/historial/*");
+
+        // Admin
+        registrarServlet(context, "AdminServlet", new AdminServlet(), "/api/admin/*");
+
+        System.out.println("==============================================");
+        System.out.println("🚀 TASTYTAP API RUNNING ON: http://localhost:8080");
+        System.out.println("👉 Login Endpoint: http://localhost:8080/api/auth/login");
+        System.out.println("==============================================");
+
         tomcat.start();
         tomcat.getServer().await();
+    }
+
+    private static void registrarServlet(Context context, String name, jakarta.servlet.Servlet servlet, String mapping) {
+        Tomcat.addServlet(context, name, servlet);
+        context.addServletMappingDecoded(mapping, name);
     }
 }
